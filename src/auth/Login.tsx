@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { RootState } from "../redux/reducers";
 
 const Login = () => {
   return (
@@ -153,4 +154,19 @@ const Google = styled.button`
   }
 `;
 
+const mapStateToProps = (state: RootState) => {
+  return {
+    user: state.userState.user,
+  };
+};
+
+interface mapDipatchToProps {
+  setUser: (user: any) => void;
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    SignIn: () => dispatch(siginAPI),
+  };
+};
 export default Login;
