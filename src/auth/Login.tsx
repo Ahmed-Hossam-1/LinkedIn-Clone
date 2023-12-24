@@ -1,8 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { RootState } from "../redux/reducers";
+import { siginAPI } from "../redux/actions";
+import { Dispatch } from "redux";
+import { connect } from "react-redux";
 
-const Login = () => {
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>;
+
+const Login = (props: Props) => {
+  const navegate = useNavigate();
+  console.log(props.user);
+  props.user && navegate("/home");
+
   return (
     <Container>
       <Nav>
@@ -20,7 +30,7 @@ const Login = () => {
           <img src="/images/login-hero.svg" alt="hero" />
         </Hero>
         <Form>
-          <Google>
+          <Google onClick={() => props.SignIn()}>
             <img src="/images/google.svg" alt="" />
             Sign in with Google
           </Google>
@@ -160,13 +170,9 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-interface mapDipatchToProps {
-  setUser: (user: any) => void;
-}
-
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    SignIn: () => dispatch(siginAPI),
+    SignIn: () => dispatch(siginAPI() as any),
   };
 };
-export default Login;
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
