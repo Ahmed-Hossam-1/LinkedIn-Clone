@@ -2,16 +2,17 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { RootState } from "../redux/reducers";
 import { siginAPI } from "../redux/actions";
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
 
-type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>;
-
-const Login = (props: Props) => {
+const Login = () => {
   const navegate = useNavigate();
-  console.log(props.user);
-  props.user && navegate("/home");
+  const user = useAppSelector((state: RootState) => state.userState.user);
+  const dispatch = useAppDispatch();
+  // Handel Sign In
+  const signIn = async () => {
+    await dispatch(siginAPI());
+    user && navegate("/home");
+  };
 
   return (
     <Container>
@@ -30,7 +31,7 @@ const Login = (props: Props) => {
           <img src="/images/login-hero.svg" alt="hero" />
         </Hero>
         <Form>
-          <Google onClick={() => props.SignIn()}>
+          <Google onClick={/*() => props.SignIn()*/ () => signIn()}>
             <img src="/images/google.svg" alt="" />
             Sign in with Google
           </Google>
@@ -164,15 +165,4 @@ const Google = styled.button`
   }
 `;
 
-const mapStateToProps = (state: RootState) => {
-  return {
-    user: state.userState.user,
-  };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    SignIn: () => dispatch(siginAPI() as any),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

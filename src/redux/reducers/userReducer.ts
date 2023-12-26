@@ -1,27 +1,30 @@
-// import firebase from "firebase/compat/app";
 import Actions from "../actions/actionsType";
 
-interface TInitialState {
-  user: any;
-}
-
-const initialState: TInitialState = {
-  user: null,
+export type TUser = {
+  email: string;
+  displayName: string;
+  photoURL: string;
 };
 
 export interface SignInAction {
   type: Actions.SET_USER;
-  payload: any;
+  user: TUser;
 }
 
-type TAction = SignInAction;
+interface TInitialState {
+  user: TUser[];
+}
 
-const userReducer = (state = initialState, action: TAction) => {
+const initialState: TInitialState = {
+  user: [],
+};
+
+const userReducer = (state = initialState, action: SignInAction) => {
   switch (action.type) {
     case Actions.SET_USER:
       return {
         ...state,
-        user: action.payload,
+        user: action.user,
       };
     default:
       return state;
