@@ -12,11 +12,15 @@ export interface SignInAction {
 }
 
 interface TInitialState {
-  user: TUser[];
+  user: TUser;
 }
 
 const initialState: TInitialState = {
-  user: [],
+  user: {
+    email: "",
+    displayName: "",
+    photoURL: "",
+  },
 };
 
 const userReducer = (state = initialState, action: SignInAction) => {

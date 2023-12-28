@@ -10,12 +10,13 @@ const Login = () => {
   const dispatch = useAppDispatch();
   // Handel Sign In
   const signIn = async () => {
-    await dispatch(siginAPI());
-    user && navegate("/home");
+    dispatch(siginAPI());
   };
+  console.log(user);
 
   return (
     <Container>
+      {user.displayName && <> {navegate("/home")} </>}
       <Nav>
         <Link to="">
           <img src="/images/login-logo.svg" alt="logo" />
@@ -31,7 +32,7 @@ const Login = () => {
           <img src="/images/login-hero.svg" alt="hero" />
         </Hero>
         <Form>
-          <Google onClick={/*() => props.SignIn()*/ () => signIn()}>
+          <Google onClick={() => signIn()}>
             <img src="/images/google.svg" alt="" />
             Sign in with Google
           </Google>
