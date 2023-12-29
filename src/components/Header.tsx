@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useAppSelector } from "../redux/app/hooks";
+import { RootState } from "../redux/reducers";
+import { signOutAPI } from "../redux/actions";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
+  const user = useAppSelector((state: RootState) => state.userState.user);
+  const dispatch = useDispatch();
   return (
     <Container>
       <Content>
@@ -14,7 +20,7 @@ const Header = () => {
           <div>
             <input type="text" placeholder="Search" />
             <SearchIcon>
-              <img loading="lazy" src="/images/search-icon.svg" alt="search" />
+              <img src="/images/search-icon.svg" alt="search" />
             </SearchIcon>
           </div>
         </Search>
@@ -52,13 +58,18 @@ const Header = () => {
             </NavList>
             <User>
               <Link to="">
-                <img src="/images/user.svg" alt="user" />
+                {user && user.photoURL ? (
+                  <img src={user.photoURL} alt="user" />
+                ) : (
+                  <img src="/images/user.svg" alt="user" />
+                )}
+
                 <span>
                   Me
                   <img src="/images/down-icon.svg" alt="down" />
                 </span>
               </Link>
-              <SignOut /*onClick={() => signOut()}*/>
+              <SignOut onClick={() => dispatch(signOutAPI() as any)}>
                 <Link to="">Sign Out</Link>
               </SignOut>
             </User>
@@ -201,7 +212,7 @@ const NavList = styled.li`
     }
   }
 `;
-const SignOut = styled(NavList)`
+const SignOut = styled.div`
   position: absolute;
   top: 45px;
   background: white;

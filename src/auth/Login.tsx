@@ -12,11 +12,10 @@ const Login = () => {
   const signIn = async () => {
     dispatch(siginAPI());
   };
-  console.log(user);
 
   return (
     <Container>
-      {user.displayName && <> {navegate("/home")} </>}
+      {user?.displayName && <> {navegate("/home")} </>}
       <Nav>
         <Link to="">
           <img src="/images/login-logo.svg" alt="logo" />

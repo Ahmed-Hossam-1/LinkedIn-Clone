@@ -12,3 +12,25 @@ export function siginAPI() {
       .catch((error) => alert(error.message));
   };
 }
+
+export function getUserAuth() {
+  // Change User Account Status
+  return (dispatch: Dispatch) => {
+    auth.onAuthStateChanged(async (payload) => {
+      if (payload) {
+        dispatch(setUser(payload));
+      }
+    });
+  };
+}
+
+export function signOutAPI() {
+  return (dispatch: Dispatch) => {
+    auth
+      .signOut()
+      .then(() => {
+        dispatch(setUser(null));
+      })
+      .catch((error) => alert(error.message));
+  };
+}
