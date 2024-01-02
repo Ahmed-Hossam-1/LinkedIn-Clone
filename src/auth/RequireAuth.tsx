@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 
 const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const user = useSelector((state: RootState) => state.userState.user);
-  return user ? children : <Navigate to="/login" replace={true} />;
+  return user?.email ? children : <Navigate to="/login" replace={true} />;
 };
 
 export default RequireAuth;

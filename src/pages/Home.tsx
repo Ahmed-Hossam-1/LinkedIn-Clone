@@ -1,5 +1,5 @@
 import Header from "../components/Header";
-import MainSection from "../components/MainSection";
+import MainSection from "../components/Home/Index";
 
 const Home = () => {
   return (

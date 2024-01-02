@@ -24,7 +24,7 @@ const App = () => {
       <Route path="/" element={<Layout />}>
         <Route path="login" element={<Login />} />
         <Route
-          path="Home"
+          index
           element={
             <RequireAuth>
               <Home />

@@ -15,7 +15,7 @@ const Login = () => {
 
   return (
     <Container>
-      {user?.displayName && <> {navegate("/home")} </>}
+      {user?.displayName && <> {navegate("/")} </>}
       <Nav>
         <Link to="">
           <img src="/images/login-logo.svg" alt="logo" />

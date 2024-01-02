@@ -12,7 +12,7 @@ const Header = () => {
     <Container>
       <Content>
         <Logo>
-          <Link to="/home">
+          <Link to="/">
             <img src="/images/home-logo.svg" alt="logo" />
           </Link>
         </Logo>
@@ -27,7 +27,7 @@ const Header = () => {
         <Nav>
           <NavListWrap>
             <NavList className="active">
-              <Link to="/home">
+              <Link to="/">
                 <img src="/images/nav-home.svg" alt="home" />
                 <span>Home</span>
               </Link>
