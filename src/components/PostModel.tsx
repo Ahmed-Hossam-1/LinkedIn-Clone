@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { RootState } from "../redux/reducers";
 import { useSelector } from "react-redux";
 import { MouseEvent, useState } from "react";
+import ReactPlayer from "react-player";
 type TProps = {
   handelClick: () => void;
   showModel: boolean;
@@ -11,8 +12,19 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
   const user = useSelector((state: RootState) => state.userState.user);
   const [editorText, setEditorText] = useState<string>("");
   const [assetArea, setAssetArea] = useState<string>("");
-  const [shareImage, setShareImage] = useState<string>("");
+  const [shareImage, setShareImage] = useState<any>("");
   const [videoLink, setVideoLink] = useState<string>("");
+
+  const handleChange = (e: any) => {
+    const image = e.target.files[0];
+
+    if (image === "" || image === undefined) {
+      alert(`not an image , the file is a ${typeof image}`);
+      return;
+    } else {
+      setShareImage(image);
+    }
+  };
 
   const reset = () => {
     setEditorText("");
@@ -20,6 +32,7 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
     setVideoLink("");
     setAssetArea("");
     handelClick();
+    // handleClick(e);
   };
 
   return (
@@ -49,7 +62,7 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
                   placeholder="What do you want to talk about?"
                   autoFocus={true}
                 />
-                {/* {assetArea === "image" ? (
+                {assetArea === "image" ? (
                   <UploadImage>
                     <input
                       type="file"
@@ -89,7 +102,7 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
                       )}
                     </>
                   )
-                )} */}
+                )}
               </Editor>
             </ShareContent>
             <ShareCreation>
