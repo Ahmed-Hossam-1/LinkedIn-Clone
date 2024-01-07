@@ -18,7 +18,7 @@ const LeftMainBox = () => {
             </UserNameText>
           </a>
           <a>
-            <AddPhotoText>Add a photo</AddPhotoText>
+            <AddPhotoText>Frontend Developer</AddPhotoText>
           </a>
           <Widget>
             <a>

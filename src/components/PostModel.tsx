@@ -1,14 +1,27 @@
 import styled from "styled-components";
 import { RootState } from "../redux/reducers";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 type TProps = {
   handelClick: () => void;
   showModel: boolean;
 };
+
 const PostModel = ({ handelClick, showModel }: TProps) => {
   const user = useSelector((state: RootState) => state.userState.user);
   const [editorText, setEditorText] = useState<string>("");
+  const [assetArea, setAssetArea] = useState<string>("");
+  const [shareImage, setShareImage] = useState<string>("");
+  const [videoLink, setVideoLink] = useState<string>("");
+
+  const reset = () => {
+    setEditorText("");
+    setShareImage("");
+    setVideoLink("");
+    setAssetArea("");
+    handelClick();
+  };
+
   return (
     <>
       {showModel && (
@@ -16,50 +29,91 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
           <Content>
             <Header>
               <h2>Create a post</h2>
-              <button onClick={() => handelClick()}>
-                <img src="/images/close-icon.svg" alt="Close" />
+              <button onClick={() => reset()}>
+                <img src="/images/close-icon.svg" alt="" />
               </button>
             </Header>
-            <SharedContent>
+            <ShareContent>
               <UserInfo>
                 {user && user.photoURL ? (
                   <img src={user.photoURL} alt="" />
                 ) : (
                   <img src="/images/user.svg" alt="" />
                 )}
-                <span>{user?.displayName && user.displayName}</span>
+                <span>{user.displayName}</span>
               </UserInfo>
               <Editor>
                 <textarea
+                  value={editorText}
+                  onChange={(e) => setEditorText(e.target.value)}
                   placeholder="What do you want to talk about?"
                   autoFocus={true}
-                  rows={5}
-                  onChange={(e) => setEditorText(e.target.value)}
                 />
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                  }}
-                >
-                  <Category title="photo">
-                    <img src="/images/photo-icon.svg" alt="" />
-                  </Category>
-                  <Category title="Video">
-                    <img src="/images/video-icon.svg" alt="" />
-                  </Category>
-                  <Category title="event">
-                    <img src="/images/event-icon.svg" alt="" />
-                  </Category>
-                  <Category title="article">
-                    <img src="/images/article-icon.svg" alt="" />
-                  </Category>
-                </div>
-                <SharePost>
-                  <button>Post</button>
-                </SharePost>
+                {/* {assetArea === "image" ? (
+                  <UploadImage>
+                    <input
+                      type="file"
+                      name="image"
+                      id="file"
+                      style={{ display: "none" }}
+                      onChange={handleChange}
+                    />
+                    <p>
+                      <label
+                        style={{
+                          cursor: "pointer",
+                          display: "block",
+                          marginBottom: "15px",
+                        }}
+                        htmlFor="file"
+                      >
+                        Select an image to share
+                      </label>
+                    </p>
+                    {shareImage && (
+                      <img src={URL.createObjectURL(shareImage)} alt="img" />
+                    )}
+                  </UploadImage>
+                ) : (
+                  assetArea === "media" && (
+                    <>
+                      <input
+                        style={{ width: "100%", height: "30px" }}
+                        type="text"
+                        value={videoLink}
+                        onChange={(e) => setVideoLink(e.target.value)}
+                        placeholder="Please input a video link"
+                      />
+                      {videoLink && (
+                        <ReactPlayer width="100%" url={videoLink} />
+                      )}
+                    </>
+                  )
+                )} */}
               </Editor>
-            </SharedContent>
+            </ShareContent>
+            <ShareCreation>
+              <AttachAssets>
+                <AssetButton>
+                  <img src="/images/share-image.svg" alt="" />
+                </AssetButton>
+                <AssetButton>
+                  <img src="/images/share-video.svg" alt="" />
+                </AssetButton>
+              </AttachAssets>
+              <ShareComment>
+                <AssetButton>
+                  <img src="/images/share-comment.svg" alt="" />
+                  Anyone
+                </AssetButton>
+              </ShareComment>
+              <PostButton
+                // onClick={(e) => handlePostArticles(e)}
+                disabled={!editorText ? true : false}
+              >
+                Post
+              </PostButton>
+            </ShareCreation>
           </Content>
         </Container>
       )}
@@ -71,113 +125,167 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 9999;
+  color: black;
   background-color: rgba(0, 0, 0, 0.8);
-  width: 100vw;
-  height: 100vh;
+  animation: fadeIn 0.3s;
 `;
 const Content = styled.div`
-  width: 90%;
-  max-width: 550px;
-  max-height: 90%;
-  background-color: #fff;
+  width: 100%;
+  max-width: 552px;
+  background-color: white;
+  max-height: 99%;
+  overflow: initial;
   border-radius: 5px;
   position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  top: 32px;
+  margin: 0 auto;
+  button {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease;
+  }
 `;
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 16px 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  font-size: 16px;
-  color: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  h2 {
+    line-height: 1.5;
+    font-weight: 400;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.6);
+  }
   button {
-    width: 40px;
     height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 40px;
+    min-width: auto;
     color: rgba(0, 0, 0, 0.15);
+    background: none;
     border-radius: 50%;
-    border: none;
     cursor: pointer;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+  svg,
+  img {
+    pointer-events: none;
   }
 `;
-const SharedContent = styled.div`
+const ShareContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow-y: auto;
+  vertical-align: baseline;
+  background: transparent;
   padding: 8px 12px;
 `;
 const UserInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
   padding: 12px 24px;
+  sv,
   img {
     width: 48px;
     height: 48px;
+    background-clip: content-box;
     border: 2px solid transparent;
     border-radius: 50%;
   }
   span {
     font-weight: 600;
+    line-height: 1.5;
     font-size: 16px;
+    margin-left: 5px;
+  }
+`;
+const ShareCreation = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px 16px 16px;
+  height: 30px;
+`;
+const AssetButton = styled.button`
+  height: 40px;
+  min-width: auto;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+  font-size: 14px;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+`;
+const AttachAssets = styled.div`
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+  ${AssetButton} {
+    width: 40px;
+  }
+`;
+const ShareComment = styled.div`
+  padding-left: 8px;
+  margin-right: auto;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  display: grid;
+  place-items: center;
+  ${AssetButton} {
+    svg,
+    img {
+      margin-right: 5px;
+    }
+    padding: 10px;
+    height: 30px;
+    border-radius: 30px;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+`;
+const PostButton = styled.button`
+  min-width: 60px;
+  padding-left: 16px;
+  padding-right: 16px;
+  background: ${(props) => (props.disabled ? "rgb(235,235,235)" : "#0a66c2")};
+  color: ${(props) => (props.disabled ? "rgb(0,0,0,0.25)" : "white")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  font-weight: 500;
+  font-size: 16px;
+  border-radius: 30px;
+  &:hover {
+    background: ${(props) => (props.disabled ? "" : "#004182")};
   }
 `;
 const Editor = styled.div`
   padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
   textarea {
     width: 100%;
     min-height: 100px;
     resize: none;
+    font-size: 16px;
+    font-weight: 400;
     outline: none;
     border: none;
-    font-size: 16px;
     line-height: 1.5;
-    color: rgba(0, 0, 0, 0.6);
-    font-weight: 400;
-    font-family: "Roboto", sans-serif;
   }
 `;
-
-const Category = styled.div`
-  padding: 4px 8px;
-  border-radius: 15px;
-  margin-top: 10px;
-  cursor: pointer;
+const UploadImage = styled.div`
+  text-align: center;
   img {
-    width: 25px;
-    height: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-`;
-
-const SharePost = styled.div`
-  cursor: pointer;
-  width: 100%;
-  text-align: end;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  margin-top: 10px;
-  button {
-    margin-top: 10px;
-    color: rgba(0, 0, 0, 0.6);
-    font-weight: 600;
-    border: none;
-    background-color: transparent;
-    transition: 0.3s;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.08);
-      border-radius: 5px;
-      padding: 5px 10px;
-    }
+    width: 100%;
   }
 `;
 export default PostModel;
