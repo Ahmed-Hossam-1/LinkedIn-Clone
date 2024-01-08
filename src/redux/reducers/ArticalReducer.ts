@@ -1,8 +1,9 @@
+import { TArticleState } from "../../types/type";
 import { ActionsArtical } from "../actions/actionsType";
 
 interface IArticalState {
   loading: boolean;
-  articals: any[];
+  articals: TArticleState[];
 }
 
 const initialState: IArticalState = {

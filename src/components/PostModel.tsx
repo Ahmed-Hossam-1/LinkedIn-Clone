@@ -1,15 +1,23 @@
 import styled from "styled-components";
-import { RootState } from "../redux/reducers";
-import { useSelector } from "react-redux";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 import ReactPlayer from "react-player";
+import { Timestamp } from "firebase/firestore";
+import { postArticles } from "../redux/actions";
+import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
+import { TArticle } from "../types/type";
+
 type TProps = {
   handelClick: () => void;
   showModel: boolean;
 };
 
 const PostModel = ({ handelClick, showModel }: TProps) => {
-  const user = useSelector((state: RootState) => state.userState.user);
+  const user = useAppSelector((state) => state.userState.user);
+  const dispatch = useAppDispatch();
+  // const artical = useSelector(
+  //   (state) => state.articalState.articals
+  // );
+
   const [editorText, setEditorText] = useState<string>("");
   const [assetArea, setAssetArea] = useState<string>("");
   const [shareImage, setShareImage] = useState<any>("");
@@ -17,13 +25,39 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
 
   const handleChange = (e: any) => {
     const image = e.target.files[0];
-
-    if (image === "" || image === undefined) {
+    console.log(image);
+    if (
+      image === "" ||
+      image === undefined ||
+      image.type.split("/")[0] !== "image"
+    ) {
       alert(`not an image , the file is a ${typeof image}`);
       return;
     } else {
       setShareImage(image);
     }
+  };
+
+  const handlePostArticles = (e: any) => {
+    e.preventDefault();
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    const payload: TArticle = {
+      image: shareImage,
+      video: videoLink,
+      user: user,
+      description: editorText,
+      timestamp: Timestamp.now(),
+    };
+    dispatch(postArticles(payload));
+    reset();
+  };
+  const switchAssetArea = (area: string) => {
+    // setShareImage({} as TImage);
+    setShareImage("");
+    setVideoLink("");
+    setAssetArea(area);
   };
 
   const reset = () => {
@@ -32,7 +66,6 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
     setVideoLink("");
     setAssetArea("");
     handelClick();
-    // handleClick(e);
   };
 
   return (
@@ -98,7 +131,11 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
                         placeholder="Please input a video link"
                       />
                       {videoLink && (
-                        <ReactPlayer width="100%" url={videoLink} />
+                        <ReactPlayer
+                          width="100%"
+                          height="250px"
+                          url={videoLink}
+                        />
                       )}
                     </>
                   )
@@ -107,21 +144,21 @@ const PostModel = ({ handelClick, showModel }: TProps) => {
             </ShareContent>
             <ShareCreation>
               <AttachAssets>
-                <AssetButton>
+                <AssetButton onClick={() => switchAssetArea("image")}>
                   <img src="/images/share-image.svg" alt="" />
                 </AssetButton>
-                <AssetButton>
-                  <img src="/images/share-video.svg" alt="" />
+                <AssetButton onClick={() => switchAssetArea("media")}>
+                  <img src="/images/share-video.svg" alt="video" />
                 </AssetButton>
               </AttachAssets>
               <ShareComment>
                 <AssetButton>
-                  <img src="/images/share-comment.svg" alt="" />
+                  <img src="/images/share-comment.svg" alt="comment" />
                   Anyone
                 </AssetButton>
               </ShareComment>
               <PostButton
-                // onClick={(e) => handlePostArticles(e)}
+                onClick={(e) => handlePostArticles(e)}
                 disabled={!editorText ? true : false}
               >
                 Post

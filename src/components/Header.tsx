@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAppSelector } from "../redux/app/hooks";
-import { RootState } from "../redux/reducers";
 import { signOutAPI } from "../redux/actions";
 import { useDispatch } from "react-redux";
 
 const Header = () => {
-  const user = useAppSelector((state: RootState) => state.userState.user);
+  const user = useAppSelector((state) => state.userState.user);
   const dispatch = useDispatch();
   return (
     <Container>

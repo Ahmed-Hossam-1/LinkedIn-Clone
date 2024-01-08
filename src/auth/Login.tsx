@@ -1,12 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { RootState } from "../redux/reducers";
 import { siginAPI } from "../redux/actions";
 import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
 
 const Login = () => {
   const navegate = useNavigate();
-  const user = useAppSelector((state: RootState) => state.userState.user);
+  const user = useAppSelector((state) => state.userState.user);
   const dispatch = useAppDispatch();
   // Handel Sign In
   const signIn = async () => {

@@ -1,10 +1,5 @@
+import { TUser } from "../../types/type";
 import Actions from "../actions/actionsType";
-
-export type TUser = {
-  email: string;
-  displayName: string;
-  photoURL: string;
-};
 
 export interface SignInAction {
   type: Actions.SET_USER;
