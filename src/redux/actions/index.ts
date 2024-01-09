@@ -1,10 +1,16 @@
 import { Dispatch } from "redux";
 import { auth, db, provider, storage } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
-import { setLoadingStatus, setUser } from "./actions";
+import { getArticles, setLoadingStatus, setUser } from "./actions";
 import { TArticle } from "../../types/type";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 
 export function siginAPI() {
   return (dispatch: Dispatch) => {
@@ -72,9 +78,9 @@ export function postArticles(payload: TArticle) {
               sharedImg: downloadURL,
             });
           });
+          dispatch(setLoadingStatus(false));
         }
       );
-      dispatch(setLoadingStatus(false));
     } else if (payload.video) {
       const collectionRef = collection(db, "articles");
       addDoc(collectionRef, {
@@ -106,5 +112,17 @@ export function postArticles(payload: TArticle) {
       });
       dispatch(setLoadingStatus(false));
     }
+  };
+}
+
+export function getArticlesAPI() {
+  return (dispatch: Dispatch) => {
+    let payload;
+    const collectionRef = collection(db, "articles");
+    const orderedRef = query(collectionRef, orderBy("actor.Date", "desc"));
+    onSnapshot(orderedRef, (snapshot) => {
+      payload = snapshot.docs.map((doc) => doc.data());
+      dispatch(getArticles(payload));
+    });
   };
 }

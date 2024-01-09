@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { siginAPI } from "../redux/actions";
 import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
+import { useEffect } from "react";
 
 const Login = () => {
   const navegate = useNavigate();
@@ -11,10 +12,12 @@ const Login = () => {
   const signIn = async () => {
     dispatch(siginAPI());
   };
+  useEffect(() => {
+    user?.displayName && navegate("/");
+  }, [user]);
 
   return (
     <Container>
-      {user?.displayName && <> {navegate("/")} </>}
       <Nav>
         <Link to="">
           <img src="/images/login-logo.svg" alt="logo" />

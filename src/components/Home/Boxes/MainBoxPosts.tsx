@@ -1,19 +1,24 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PostModel from "../../PostModel";
-import { useAppSelector } from "../../../redux/app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/app/hooks";
 import { TArticleState } from "../../../types/type";
 import ReactPlayer from "react-player";
+import { getArticlesAPI } from "../../../redux/actions";
 
 const MainBoxPosts = () => {
   const user = useAppSelector((state) => state.userState.user);
   const { loading, articals } = useAppSelector((state) => state.articalState);
+  const dispatch = useAppDispatch();
   const [showModel, setShowModel] = useState<boolean>(false);
   const handelClick = (): void => {
     setShowModel(!showModel);
   };
 
-  console.log(articals);
+  useEffect(() => {
+    dispatch(getArticlesAPI());
+  }, [dispatch]);
+
   return (
     <Container>
       <ShareBox>
@@ -140,6 +145,8 @@ const MainBoxPosts = () => {
 
 const Container = styled.div`
   grid-area: main;
+  height: 100vh;
+  overflow-y: auto;
 `;
 const CommonCard = styled.div`
   text-align: center;
